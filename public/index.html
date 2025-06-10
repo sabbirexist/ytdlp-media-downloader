@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ultimate Downloader</title>
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+  <div class="w-full max-w-xl p-6 bg-zinc-900 rounded-2xl shadow-lg">
+    <h1 class="text-3xl font-semibold text-center mb-6">🎥 Ultimate Downloader</h1>
+    <form id="download-form" class="space-y-4">
+      <input type="url" name="url" id="url" placeholder="Paste media URL here..." required class="w-full p-3 rounded-lg bg-zinc-800 text-white placeholder-gray-400" />
+      <select name="type" id="type" class="w-full p-3 rounded-lg bg-zinc-800 text-white">
+        <option value="video">Video</option>
+        <option value="audio">Audio</option>
+        <option value="image">Thumbnail</option>
+      </select>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">Download</button>
+    </form>
+    <div id="status" class="mt-4 text-center text-sm text-gray-300"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('download-form');
+    const status = document.getElementById('status');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = "Processing...";
+      const url = form.url.value;
+      const type = form.type.value;
+      try {
+        const res = await fetch('/.netlify/functions/download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, type }),
+        });
+        const data = await res.json();
+        if (data.error) {
+          status.textContent = `❌ ${data.error}`;
+        } else {
+          status.innerHTML = `✅ <a href="${data.downloadUrl}" class="text-blue-400 underline" download>Click to Download</a>`;
+        }
+      } catch (err) {
+        status.textContent = `❌ Failed: ${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
