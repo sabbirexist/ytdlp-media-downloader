@@ -30,11 +30,11 @@
       const url = form.url.value;
       const type = form.type.value;
       try {
-        const res = await fetch('/.netlify/functions/download', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, type }),
-        });
+        const res = await fetch('fetch('https://render-backend-i0fl.onrender.com', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ url, type }),
+});
         const data = await res.json();
         if (data.error) {
           status.textContent = `❌ ${data.error}`;
